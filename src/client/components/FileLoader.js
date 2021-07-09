@@ -1,64 +1,27 @@
 import React, { useEffect, useState } from "react";
 import { CSVReader } from "react-papaparse";
 import PlotView from "./PlotView";
-
 import makeChartData from "../utils/makeChartData";
 import getFFT from "../utils/getFFT";
+import remMean from "../utils/remMean";
+import convertGtoSI from "../utils/convertGtoSI";
+import fileDropStyle from "./FileLoaderStyle";
 
 export default () => {
   const [plotData, setPlotData] = useState([]);
   const [file, setFile] = useState(null);
   const [plotlyData, setPlotlyData] = useState([]);
   const [showFFT, setShowFFT] = useState(false);
+  const [logYFFT, setLogYFFT] = useState(true);
   const [fftData, setFftData] = useState([]);
 
-  const fileDropStyle = {
-    dropArea: {
-      borderColor: "darkslategray",
-      borderRadius: 20,
-    },
-    dropAreaActive: {
-      borderColor: "red",
-    },
-    dropFile: {
-      width: 100,
-      height: 120,
-      background: "#555",
-    },
-    fileSizeInfo: {
-      color: "#fff",
-      backgroundColor: "inherit",
-      borderRadius: 3,
-      lineHeight: 1,
-      marginBottom: "0.5em",
-      padding: "0 0.5em",
-    },
-    fileNameInfo: {
-      color: "#fff",
-      backgroundColor: "inherit",
-      borderRadius: 3,
-      fontSize: 10,
-      lineHeight: 1,
-      padding: "0 0.5em",
-    },
-    removeButton: {
-      color: "black",
-    },
-    progressBar: {
-      backgroundColor: "#999",
-      borderColor: "#222",
-    },
-  };
-
   useEffect(() => {
-    console.log(plotData);
     if (plotData[0]) {
-      console.log(plotData);
       const arr = [];
       for (let i = 0; i < plotData.length; i++) {
         arr.push({
           x: plotData[i].data.map((pts) => pts.x),
-          y: plotData[i].data.map((pts) => pts.y),
+          y: convertGtoSI(remMean(plotData[i].data.map((pts) => pts.y))),
           type: "scatter",
           mode: "lines",
           name: plotData[i].id,
@@ -93,16 +56,34 @@ export default () => {
   };
   const handleClick = (e) => {
     e.preventDefault();
-    const fftData = getFFT(plotData[0].data.map((pts) => pts.y));
-    setFftData([
-      {
-        x: fftData.x,
-        y: fftData.y,
-        type: "bar",
-        // name: plotData[i].id,
-      },
-    ]);
-    setShowFFT(true);
+    if (showFFT) {
+      setShowFFT(!showFFT);
+      setFftData([]);
+    } else {
+      const arr = [];
+      for (let i = 0; i < plotData.length; i++) {
+        const sampleFreq =
+          1 / ((plotData[i].data[1].x - plotData[i].data[0].x) / 1000);
+
+        const fftData = getFFT(
+          convertGtoSI(remMean(plotData[i].data.map((pts) => pts.y))),
+          sampleFreq
+        );
+        arr.push({
+          x: fftData.x,
+          y: fftData.y,
+          type: "bar",
+          name: plotData[i].id,
+        });
+      }
+      setFftData(arr);
+      setShowFFT(true);
+    }
+  };
+
+  const handleClickLogYFFT = (e) => {
+    e.preventDefault();
+    setLogYFFT(!logYFFT);
   };
 
   return (
@@ -118,13 +99,19 @@ export default () => {
           <span>Drop CSV file here or click to upload.</span>
         </CSVReader>
         {plotData.length !== 0 && file && plotlyData && (
-          <PlotView plotlyData={plotlyData} file={file} />
+          <PlotView plotlyData={plotlyData} file={`${file} - Time History`} />
         )}
         {plotData.length !== 0 && showFFT && (
-          <PlotView plotlyData={fftData} file="FFT" logY={true} />
+          <PlotView
+            plotlyData={fftData}
+            file={`${file} - FFT Spectra`}
+            logY={logYFFT}
+            type="spectra"
+          />
         )}
       </div>
       <button onClick={handleClick}>FFT</button>
+      <button onClick={handleClickLogYFFT}>log Y axis</button>
     </>
   );
 };

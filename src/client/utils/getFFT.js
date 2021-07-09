@@ -6,7 +6,9 @@ function nearestPowerOf2(n) {
   return 1 << (31 - Math.clz32(n));
 }
 
-const getFFT = (data, sampleFreq = 256) => {
+const getFFT = (data, sampleFreq = 64) => {
+  const refVal = 1 * 10e-6; // SI ISO criteria
+  data = data.map((val) => val / refVal);
   const size = nearestPowerOf2(data.length);
   const scopedData = data.slice(0, size);
   const f = new FFT(size);
@@ -19,10 +21,10 @@ const getFFT = (data, sampleFreq = 256) => {
     mag.push(Math.sqrt(out[i] ** 2 + out[i + 1] ** 2));
   }
   const p = d3.precisionRound(0.1, 1.1);
-  const d3f = d3.format("." + p + "r");
+  // const d3f = d3.format("." + p + "r");
   const bins = d3.range(0, sampleFreq / 2, sampleFreq / (2 * size));
 
-  return { x: bins, y: mag };
+  return { x: bins, y: mag.map((val) => 20 * Math.log10(val)) };
 };
 
 export default getFFT;
