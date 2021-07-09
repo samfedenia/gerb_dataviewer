@@ -101,6 +101,21 @@ export default () => {
         {plotData.length !== 0 && file && plotlyData && (
           <PlotView plotlyData={plotlyData} file={`${file} - Time History`} />
         )}
+        {plotData.length !== 0 && (
+          <div
+            style={{
+              display: "flex",
+              width: "20vw",
+              marginLeft: "auto",
+              marginRight: "auto",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <button onClick={handleClick}>FFT</button>
+            <button onClick={handleClickLogYFFT}>Toggle log Y axis</button>
+          </div>
+        )}
         {plotData.length !== 0 && showFFT && (
           <PlotView
             plotlyData={fftData}
@@ -110,8 +125,6 @@ export default () => {
           />
         )}
       </div>
-      <button onClick={handleClick}>FFT</button>
-      <button onClick={handleClickLogYFFT}>log Y axis</button>
     </>
   );
 };
