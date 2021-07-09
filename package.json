@@ -19,9 +19,12 @@
   "homepage": "https://github.com/samfedenia/react-boilerplate#readme",
   "dependencies": {
     "express": "^4.17.1",
+    "node-polyfill-webpack-plugin": "^1.1.4",
+    "plotly.js": "^2.2.1",
     "react": "^17.0.2",
-    "react-dom": "^17.0.2"
-    
+    "react-dom": "^17.0.2",
+    "react-papaparse": "^3.16.1",
+    "react-plotly.js": "^2.5.1"
   },
   "devDependencies": {
     "@babel/core": "^7.14.6",
