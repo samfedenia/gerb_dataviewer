@@ -13,11 +13,17 @@ export default ({
     layout.xaxis = { type: "log" };
   }
   if (logY) {
-    layout.yaxis = { type: "log" };
+    layout.yaxis = { type: "log", range: [1.7, 3] };
+  } else {
+    layout.yaxis = { autorange: true };
   }
   if (type === "time") {
     layout.xaxis = { ...layout.xaxis, title: "Time", autorange: true };
-    layout.yaxis = { title: "Acceleration [m/s<sup>2</sup>]", autorange: true };
+    layout.yaxis = {
+      ...layout.yaxis,
+      title: "Acceleration [m/s<sup>2</sup>]",
+      autorange: true,
+    };
   }
   if (type === "spectra") {
     layout.xaxis = {

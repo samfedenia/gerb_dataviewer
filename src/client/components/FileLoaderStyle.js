@@ -2,6 +2,7 @@ const fileDropStyle = {
   dropArea: {
     borderColor: "darkslategray",
     borderRadius: 20,
+    height: 100,
   },
   dropAreaActive: {
     borderColor: "red",

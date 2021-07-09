@@ -12,7 +12,8 @@ export default () => {
   const [file, setFile] = useState(null);
   const [plotlyData, setPlotlyData] = useState([]);
   const [showFFT, setShowFFT] = useState(false);
-  const [logYFFT, setLogYFFT] = useState(true);
+  const [logYFFT, setLogYFFT] = useState(false);
+  const [logXFFT, setLogXFFT] = useState(false);
   const [fftData, setFftData] = useState([]);
 
   useEffect(() => {
@@ -72,7 +73,8 @@ export default () => {
         arr.push({
           x: fftData.x,
           y: fftData.y,
-          type: "bar",
+          type: "scatter",
+          mode: "lines",
           name: plotData[i].id,
         });
       }
@@ -84,6 +86,11 @@ export default () => {
   const handleClickLogYFFT = (e) => {
     e.preventDefault();
     setLogYFFT(!logYFFT);
+  };
+
+  const handleClickLogXFFT = (e) => {
+    e.preventDefault();
+    setLogXFFT(!logXFFT);
   };
 
   return (
@@ -113,7 +120,8 @@ export default () => {
             }}
           >
             <button onClick={handleClick}>FFT</button>
-            <button onClick={handleClickLogYFFT}>Toggle log Y axis</button>
+            <button onClick={handleClickLogXFFT}>Toggle logX </button>
+            <button onClick={handleClickLogYFFT}>Toggle logY</button>
           </div>
         )}
         {plotData.length !== 0 && showFFT && (
@@ -121,6 +129,7 @@ export default () => {
             plotlyData={fftData}
             file={`${file} - FFT Spectra`}
             logY={logYFFT}
+            logX={logXFFT}
             type="spectra"
           />
         )}
