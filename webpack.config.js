@@ -26,6 +26,11 @@ module.exports = {
           },
         },
       },
+      {
+        test: /\.m?js$/,
+        enforce: "pre",
+        use: ["source-map-loader"],
+      },
     ],
   },
   resolve: {
