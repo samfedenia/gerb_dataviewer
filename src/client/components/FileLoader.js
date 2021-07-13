@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { CSVReader } from "react-papaparse";
+import { CSVReader, readRemoteFile } from "react-papaparse";
 import PlotView from "./PlotView";
 import makeChartData from "../utils/makeChartData";
 import getFFT from "../utils/getFFT";
@@ -18,6 +18,7 @@ export default ({ fileLoaded, setFileLoaded }) => {
   const [logYFFT, setLogYFFT] = useState(false);
   const [logXFFT, setLogXFFT] = useState(false);
   const [fftData, setFftData] = useState([]);
+  const [showSample, setShowSample] = useState(false);
 
   useEffect(() => {
     if (plotData[0]) {
@@ -35,11 +36,21 @@ export default ({ fileLoaded, setFileLoaded }) => {
     }
   }, [plotData]);
 
-  const handleOnDrop = (data, e) => {
+  const handleOnDrop = (data, e, sample = false) => {
+    if (sample) {
+      const newData = [];
+      data.forEach((row) => {
+        newData.push({
+          data: row,
+        });
+      });
+      data = newData;
+    }
     setCsvData(data);
     setFileLoaded(true);
     setFile(e.name);
     const rawArrayData = data.map((row) => row.data);
+
     let start = 1;
     let arrayData;
     if (rawArrayData.findIndex((arr) => arr[0] === "DATA_START")) {
@@ -48,7 +59,8 @@ export default ({ fileLoaded, setFileLoaded }) => {
     }
 
     arrayData = rawArrayData.slice(start);
-    setPlotData(makeChartData(arrayData));
+    const newPlotData = makeChartData(arrayData);
+    setPlotData(newPlotData);
   };
 
   const handleOnError = (err, file, inputElem, reason) => {
@@ -62,6 +74,7 @@ export default ({ fileLoaded, setFileLoaded }) => {
     setFftData([]);
     setShowFFT(false);
     setFileLoaded(false);
+    setShowSample(false);
   };
   const handleClick = (e) => {
     e.preventDefault();
@@ -106,6 +119,18 @@ export default ({ fileLoaded, setFileLoaded }) => {
     setShowCsvFile(!showCsvFile);
   };
 
+  const handleShowSample = (e) => {
+    e.preventDefault();
+    setShowSample(true);
+    const config = {
+      complete: (results, file) => {
+        const arg = { name: file };
+        handleOnDrop(results.data, arg, true);
+      },
+    };
+    readRemoteFile("/data/sample.csv", config);
+  };
+
   const logButtonStyle = (prop) =>
     !prop
       ? { color: "black", margin: "1rem" }
@@ -113,6 +138,21 @@ export default ({ fileLoaded, setFileLoaded }) => {
 
   return (
     <>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          margin: "1rem",
+        }}
+      >
+        {!showSample && !fileLoaded && (
+          <button onClick={handleShowSample}>Load sample data</button>
+        )}
+        {showSample && (
+          <button onClick={handleOnRemoveFile}>Clear sample data</button>
+        )}
+      </div>
       <div
         onDrop={(e) => handleDrop(e)}
         style={{
@@ -128,6 +168,7 @@ export default ({ fileLoaded, setFileLoaded }) => {
         >
           <span>Drop CSV file here or click to upload.</span>
         </CSVReader>
+
         {fileLoaded && (
           <div
             style={{
