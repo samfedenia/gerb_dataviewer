@@ -1,6 +1,6 @@
 import React from "react";
 
-const ExampleTable = () => {
+export default () => {
   return (
     <div style={{ width: "80vw", paddingTop: "2rem" }}>
       <h2>Example CSV file format</h2>
@@ -31,5 +31,3 @@ const ExampleTable = () => {
     </div>
   );
 };
-
-export default ExampleTable;

@@ -6,8 +6,11 @@ import getFFT from "../utils/getFFT";
 import remMean from "../utils/remMean";
 import convertGtoSI from "../utils/convertGtoSI";
 import fileDropStyle from "./FileLoaderStyle";
+import CSVTable from "./CSVTable";
 
-export default ({ setFileLoaded }) => {
+export default ({ fileLoaded, setFileLoaded }) => {
+  const [showCsvFile, setShowCsvFile] = useState(false);
+  const [csvData, setCsvData] = useState(null);
   const [plotData, setPlotData] = useState([]);
   const [file, setFile] = useState(null);
   const [plotlyData, setPlotlyData] = useState([]);
@@ -33,6 +36,7 @@ export default ({ setFileLoaded }) => {
   }, [plotData]);
 
   const handleOnDrop = (data, e) => {
+    setCsvData(data);
     setFileLoaded(true);
     setFile(e.name);
     const rawArrayData = data.map((row) => row.data);
@@ -52,6 +56,8 @@ export default ({ setFileLoaded }) => {
   };
 
   const handleOnRemoveFile = (data) => {
+    setShowCsvFile(false);
+    setCsvData(null);
     setPlotData([]);
     setFftData([]);
     setShowFFT(false);
@@ -95,8 +101,15 @@ export default ({ setFileLoaded }) => {
     setLogXFFT(!logXFFT);
   };
 
+  const handleShowCsvFile = (e) => {
+    e.preventDefault();
+    setShowCsvFile(!showCsvFile);
+  };
+
   const logButtonStyle = (prop) =>
-    !prop ? { color: "black" } : { color: "green" };
+    !prop
+      ? { color: "black", margin: "1rem" }
+      : { color: "green", margin: "1rem" };
 
   return (
     <>
@@ -115,21 +128,41 @@ export default ({ setFileLoaded }) => {
         >
           <span>Drop CSV file here or click to upload.</span>
         </CSVReader>
+        {fileLoaded && (
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              margin: "1rem",
+            }}
+          >
+            <button onClick={handleShowCsvFile}>Show CSV file data</button>
+          </div>
+        )}
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          {showCsvFile && <CSVTable data={csvData} />}
+        </div>
         {plotData.length !== 0 && file && plotlyData && (
           <PlotView plotlyData={plotlyData} file={`${file} - Time History`} />
         )}
+
         {plotData.length !== 0 && (
           <div
             style={{
               display: "flex",
-              width: "20vw",
-              marginLeft: "auto",
-              marginRight: "auto",
-              justifyContent: "space-between",
+              justifyContent: "center",
               alignItems: "center",
             }}
           >
-            <button onClick={handleClick}>
+            <button onClick={handleClick} style={{ margin: "1rem" }}>
               {fftData.length > 0 ? "Hide" : "Show"} FFT
             </button>
             {fftData.length > 0 && (

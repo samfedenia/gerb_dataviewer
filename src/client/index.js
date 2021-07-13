@@ -22,7 +22,7 @@ const Main = () => {
       <h3 style={{ margin: "2rem", width: "calc(100vw - 4rem)" }}>
         CSV Dataviewer
       </h3>
-      <FileLoader setFileLoaded={setFileLoaded} />
+      <FileLoader fileLoaded={fileLoaded} setFileLoaded={setFileLoaded} />
       {!fileLoaded && <ExampleTable />}
     </div>
   );
