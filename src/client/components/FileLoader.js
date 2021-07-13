@@ -7,7 +7,7 @@ import remMean from "../utils/remMean";
 import convertGtoSI from "../utils/convertGtoSI";
 import fileDropStyle from "./FileLoaderStyle";
 
-export default () => {
+export default ({ setFileLoaded }) => {
   const [plotData, setPlotData] = useState([]);
   const [file, setFile] = useState(null);
   const [plotlyData, setPlotlyData] = useState([]);
@@ -33,6 +33,7 @@ export default () => {
   }, [plotData]);
 
   const handleOnDrop = (data, e) => {
+    setFileLoaded(true);
     setFile(e.name);
     const rawArrayData = data.map((row) => row.data);
     let start = 1;
@@ -54,6 +55,7 @@ export default () => {
     setPlotData([]);
     setFftData([]);
     setShowFFT(false);
+    setFileLoaded(false);
   };
   const handleClick = (e) => {
     e.preventDefault();
@@ -93,9 +95,17 @@ export default () => {
     setLogXFFT(!logXFFT);
   };
 
+  const logButtonStyle = (prop) =>
+    !prop ? { color: "black" } : { color: "green" };
+
   return (
     <>
-      <div onDrop={(e) => handleDrop(e)}>
+      <div
+        onDrop={(e) => handleDrop(e)}
+        style={{
+          width: "95vw",
+        }}
+      >
         <CSVReader
           onDrop={(data, e) => handleOnDrop(data, e)}
           onError={handleOnError}
@@ -119,9 +129,25 @@ export default () => {
               alignItems: "center",
             }}
           >
-            <button onClick={handleClick}>FFT</button>
-            <button onClick={handleClickLogXFFT}>Toggle logX </button>
-            <button onClick={handleClickLogYFFT}>Toggle logY</button>
+            <button onClick={handleClick}>
+              {fftData.length > 0 ? "Hide" : "Show"} FFT
+            </button>
+            {fftData.length > 0 && (
+              <>
+                <button
+                  style={logButtonStyle(logXFFT)}
+                  onClick={handleClickLogXFFT}
+                >
+                  logX {logXFFT ? "on" : "off"}
+                </button>
+                <button
+                  style={logButtonStyle(logYFFT)}
+                  onClick={handleClickLogYFFT}
+                >
+                  logY {logYFFT ? "on" : "off"}
+                </button>
+              </>
+            )}
           </div>
         )}
         {plotData.length !== 0 && showFFT && (
