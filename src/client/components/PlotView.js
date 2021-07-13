@@ -13,7 +13,7 @@ export default ({
     layout.xaxis = { type: "log" };
   }
   if (logY) {
-    layout.yaxis = { type: "log", range: [1.7, 3] };
+    layout.yaxis = { type: "log", autorange: "true" };
   } else {
     layout.yaxis = { autorange: true };
   }

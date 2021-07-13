@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 export default ({ data }) => {
   return (
@@ -8,6 +8,8 @@ export default ({ data }) => {
           return <p key={idx}>{row.data}</p>;
         }
       })}
+      <p>...</p>
+      <p>...</p>
     </>
   );
 };
