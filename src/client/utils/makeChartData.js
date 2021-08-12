@@ -1,5 +1,5 @@
 import * as d3 from "d3";
-const parser = d3.timeParse("%Y/%m/%d %H:%M:%S.%f");
+const parser = d3.timeParse("%m/%d/%y %H:%M:%S.%f");
 
 const makeChartData = (rawData) => {
   const headers = rawData.shift(1);
