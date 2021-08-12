@@ -20,6 +20,8 @@
   },
   "homepage": "https://github.com/samfedenia/react-boilerplate#readme",
   "dependencies": {
+    "@material-ui/core": "^4.12.3",
+    "@material-ui/styles": "^4.11.4",
     "d3": "^7.0.0",
     "express": "^4.17.1",
     "fft.js": "^4.0.4",

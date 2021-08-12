@@ -1,32 +1,31 @@
-import { autoType } from "d3";
-import React, { useState } from "react";
+import React, {useMemo} from "react";
 import ReactDOM from "react-dom";
-import ExampleTable from "./components/ExampleTable";
+import App from './App'
+import useMediaQuery from '@material-ui/core/useMediaQuery';
+import { createTheme } from '@material-ui/core/styles';
+import { ThemeProvider } from '@material-ui/styles';
+import CssBaseline from '@material-ui/core/CssBaseline';
 
-import FileLoader from "./components/FileLoader";
+const ThemedApp = () => {
+  const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
 
-const Main = () => {
-  const [fileLoaded, setFileLoaded] = useState(false);
+  const theme = React.useMemo(
+    () =>
+      createTheme({
+        palette: {
+          type: prefersDarkMode ? 'dark' : 'light',
+        },
+      }),
+    [prefersDarkMode],
+  );
 
   return (
-    <div
-      id="container"
-      style={{
-        height: "15vh",
-        width: "100%",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-      }}
-    >
-      <h3 style={{ margin: "2rem", width: "calc(100vw - 4rem)" }}>
-        CSV Dataviewer
-      </h3>
-      <FileLoader fileLoaded={fileLoaded} setFileLoaded={setFileLoaded} />
-      {!fileLoaded && <ExampleTable />}
-    </div>
-  );
-};
+    <ThemeProvider theme={theme}>
+      <CssBaseline/>
+      <App/>
+    </ThemeProvider>
+  )
+}
 
 const app = document.getElementById("app");
-ReactDOM.render(<Main />, app);
+ReactDOM.render(<ThemedApp />, app);

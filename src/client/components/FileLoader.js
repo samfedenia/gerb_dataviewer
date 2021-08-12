@@ -7,6 +7,7 @@ import remMean from "../utils/remMean";
 import convertGtoSI from "../utils/convertGtoSI";
 import fileDropStyle from "./FileLoaderStyle";
 import CSVTable from "./CSVTable";
+import Button from '@material-ui/core/Button'
 
 export default ({ fileLoaded, setFileLoaded }) => {
   const [showCsvFile, setShowCsvFile] = useState(false);
@@ -147,10 +148,10 @@ export default ({ fileLoaded, setFileLoaded }) => {
         }}
       >
         {!showSample && !fileLoaded && (
-          <button onClick={handleShowSample}>Load sample data</button>
+          <Button color="primary" onClick={handleShowSample}>Load sample data</Button>
         )}
         {showSample && (
-          <button onClick={handleOnRemoveFile}>Clear sample data</button>
+          <Button color="primary" onClick={handleOnRemoveFile}>Clear sample data</Button>
         )}
       </div>
       <div
@@ -178,7 +179,7 @@ export default ({ fileLoaded, setFileLoaded }) => {
               margin: "1rem",
             }}
           >
-            <button onClick={handleShowCsvFile}>Show CSV file data</button>
+            <Button color="primary" onClick={handleShowCsvFile}>Show CSV file data</Button>
           </div>
         )}
         <div
@@ -203,23 +204,23 @@ export default ({ fileLoaded, setFileLoaded }) => {
               alignItems: "center",
             }}
           >
-            <button onClick={handleClick} style={{ margin: "1rem" }}>
+            <Button color="primary" onClick={handleClick} style={{ margin: "1rem" }}>
               {fftData.length > 0 ? "Hide" : "Show"} FFT
-            </button>
+            </Button>
             {fftData.length > 0 && (
               <>
-                <button
+                <Button color="primary"
                   style={logButtonStyle(logXFFT)}
                   onClick={handleClickLogXFFT}
                 >
                   logX {logXFFT ? "on" : "off"}
-                </button>
-                <button
+                </Button>
+                <Button color="primary"
                   style={logButtonStyle(logYFFT)}
                   onClick={handleClickLogYFFT}
                 >
                   logY {logYFFT ? "on" : "off"}
-                </button>
+                </Button>
               </>
             )}
           </div>
