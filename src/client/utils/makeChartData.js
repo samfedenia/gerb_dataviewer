@@ -1,3 +1,6 @@
+import * as d3 from "d3";
+const parser = d3.timeParse("%Y/%m/%d %H:%M:%S.%f");
+
 const makeChartData = (rawData) => {
   const headers = rawData.shift(1);
   const output = [];
@@ -6,7 +9,7 @@ const makeChartData = (rawData) => {
     const data = {
       id: headers[i],
       data: column.map(([x, y]) => ({
-        x: new Date(x),
+        x: parser(x.slice(0,-3)),
         y: Number(y),
       })),
     };
