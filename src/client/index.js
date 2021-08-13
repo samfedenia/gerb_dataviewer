@@ -1,4 +1,4 @@
-import React, {useMemo} from "react";
+import React, {useEffect, useState} from "react";
 import ReactDOM from "react-dom";
 import App from './App'
 import useMediaQuery from '@material-ui/core/useMediaQuery';
@@ -8,21 +8,21 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 
 const ThemedApp = () => {
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
-
+  const [userOverrideDarkMode, setUserOverrideDarkMode] = useState(prefersDarkMode)
   const theme = React.useMemo(
     () =>
       createTheme({
         palette: {
-          type: prefersDarkMode ? 'dark' : 'light',
+          type: userOverrideDarkMode ? 'dark' : 'light',
         },
       }),
-    [prefersDarkMode],
+    [userOverrideDarkMode],
   );
 
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline/>
-      <App/>
+      <App darkMode={userOverrideDarkMode} setDarkMode={setUserOverrideDarkMode}/>
     </ThemeProvider>
   )
 }

@@ -1,5 +1,6 @@
 import React from "react";
 import Plot from "react-plotly.js";
+import {useTheme} from '@material-ui/core'
 
 export default ({
   plotlyData,
@@ -8,14 +9,47 @@ export default ({
   logX = false,
   type = "time",
 }) => {
+  const theme = useTheme();
   let layout = { title: file, autosize: true, responsive: true };
+  layout = {...layout, 
+    paper_bgcolor: theme.palette.background.paper,
+    plot_bgcolor:theme.palette.background.paper,
+    xaxis: {
+      color: theme.palette.text.primary
+    },
+    yaxis: {
+      color: theme.palette.text.secondary
+    },
+    legend: {
+      font: {
+        color: theme.palette.text.primary
+      },
+    },
+    title: {
+      font: {
+        color: theme.palette.text.primary,
+      }
+    },
+    scene: {
+      xaxis: {
+        color: theme.palette.text.primary
+      },
+      yaxis: {
+        color: theme.palette.text.primary
+      },
+      zaxis: {
+        color: theme.palette.text.primary
+      },
+    }
+
+  }
   if (logX) {
-    layout.xaxis = { type: "log" };
+    layout.xaxis = { ...layout.xaxis, type: "log" };
   }
   if (logY) {
-    layout.yaxis = { type: "log", autorange: "true" };
+    layout.yaxis = { ...layout.yaxis, type: "log", autorange: "true" };
   } else {
-    layout.yaxis = { autorange: true };
+    layout.yaxis = { ...layout.yaxis, autorange: true };
   }
   if (type === "time") {
     layout.xaxis = { ...layout.xaxis, title: "Time", autorange: true };
@@ -41,7 +75,7 @@ export default ({
       data={plotlyData}
       layout={layout}
       useResizeHandler={true}
-      style={{ width: "calc(100%-3rem)", height: "calc(100%-3rem)" }}
+      style={{ width: "calc(100%-3rem)", height: "calc(100%-3rem)", }}
     />
   );
 };

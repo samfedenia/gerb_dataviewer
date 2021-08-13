@@ -134,7 +134,7 @@ export default ({ fileLoaded, setFileLoaded }) => {
 
   const logButtonStyle = (prop) =>
     !prop
-      ? { color: "black", margin: "1rem" }
+      ? { margin: "1rem" }
       : { color: "green", margin: "1rem" };
 
   return (
@@ -148,10 +148,10 @@ export default ({ fileLoaded, setFileLoaded }) => {
         }}
       >
         {!showSample && !fileLoaded && (
-          <Button color="primary" onClick={handleShowSample}>Load sample data</Button>
+          <Button variant="contained" color="primary" onClick={handleShowSample}>Load sample data</Button>
         )}
         {showSample && (
-          <Button color="primary" onClick={handleOnRemoveFile}>Clear sample data</Button>
+          <Button variant="contained" color="primary" onClick={handleOnRemoveFile}>Clear sample data</Button>
         )}
       </div>
       <div
@@ -179,7 +179,7 @@ export default ({ fileLoaded, setFileLoaded }) => {
               margin: "1rem",
             }}
           >
-            <Button color="primary" onClick={handleShowCsvFile}>Show CSV file data</Button>
+            <Button variant="contained" color="primary" onClick={handleShowCsvFile}>Show CSV file data</Button>
           </div>
         )}
         <div
@@ -204,18 +204,18 @@ export default ({ fileLoaded, setFileLoaded }) => {
               alignItems: "center",
             }}
           >
-            <Button color="primary" onClick={handleClick} style={{ margin: "1rem" }}>
+            <Button variant="contained" color="primary" onClick={handleClick} style={{ margin: "1rem" }}>
               {fftData.length > 0 ? "Hide" : "Show"} FFT
             </Button>
             {fftData.length > 0 && (
               <>
-                <Button color="primary"
+                <Button variant="contained" color="primary"
                   style={logButtonStyle(logXFFT)}
                   onClick={handleClickLogXFFT}
                 >
                   logX {logXFFT ? "on" : "off"}
                 </Button>
-                <Button color="primary"
+                <Button variant="contained" color="primary"
                   style={logButtonStyle(logYFFT)}
                   onClick={handleClickLogYFFT}
                 >
